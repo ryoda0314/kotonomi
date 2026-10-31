@@ -1,0 +1,102 @@
+/* The keyboard on screen: keys on hairlines, one accent for the key to press next (and the Shift with it), violet for
+   a key pressed off the way. Widths are in keys (--u), so the rows stagger as on a real keyboard: narrow (a phone)
+   12.5 keys across with the keys the sentences need; from 560 px across the whole keyboard, 15 keys. */
+.wrap { display: flex; flex-direction: column; gap: 8px; }
+.notice { margin: 0; padding: 8px 12px; border-left: 3px solid var(--again); background: var(--again-tint); font-size: 13.5px; line-height: 1.7; }
+
+.board { container-type: inline-size; }
+/* On a phone the keys take the page's side margins too: a few pixels more for each finger. */
+@media (max-width: 560px) {
+  .board { margin-inline: -10px; }
+}
+.keys {
+  --gap: 4px;
+  --pad: 6px;
+  --u: calc((100cqw - 2 * var(--pad)) / 12.5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding: var(--pad) calc(var(--pad) - var(--gap)) var(--pad) var(--pad);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.row { display: flex; }
+.row[data-row="1"] { padding-left: calc(var(--u) * 0.5); }
+.row[data-row="2"] { padding-left: calc(var(--u) * 0.75); }
+.spaceRow { padding-left: calc(var(--u) * 3.25); }
+
+.key {
+  position: relative;
+  flex: 0 0 auto;
+  width: calc(var(--u) * var(--wn, var(--w, 1)) - var(--gap));
+  margin-right: var(--gap);
+  height: 44px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--line-2);
+  border-radius: 7px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.1;
+  cursor: pointer;
+  transition: transform 0.06s ease, background 0.1s ease, opacity 0.2s ease;
+}
+.key:active { transform: scale(0.95); background: var(--tint); }
+.main { display: block; }
+.top { display: block; font-size: 10px; color: var(--muted); }
+.label { font-family: var(--font-ui); font-size: 11px; color: var(--muted); }
+.mod { color: var(--ink-2); }
+/* The ends of the rows: on a phone only the left Shift and ⌫. */
+.lead, .tail, .extra { display: none; }
+.lead.shiftKey, .tail.backKey { display: inline-flex; }
+.blank { visibility: hidden; }
+.space { --wn: 6; }
+
+/* F and J: the small ridges the index fingers find without looking. */
+.bump::after {
+  content: ""; position: absolute; bottom: 6px; left: 50%; width: 9px; height: 2px; border-radius: 1px;
+  background: currentColor; opacity: 0.45; transform: translateX(-50%);
+}
+
+.on { border-color: var(--accent); color: var(--accent); background: var(--tint); }
+/* Not in use here: there, faint, still a key. */
+.faint { opacity: 0.32; }
+/* The key to press next. */
+.next { border-color: var(--accent); background: var(--accent); color: #fff; opacity: 1; }
+.next .top, .next .label { color: rgba(255, 255, 255, 0.82); }
+/* Pressed on the keyboard in front of the learner. */
+.pressed { outline: 3px solid var(--tint); background: var(--tint); }
+.next.pressed { background: var(--accent); }
+/* Pressed off the way: a violet flash, then violet until the right key comes. Two names for one animation, taken in
+   turns, so a second miss plays it again. */
+.missed { border-color: var(--again); background: var(--again-tint); color: var(--again); opacity: 1; }
+.flashA { animation: flashA 0.5s ease-out; }
+.flashB { animation: flashB 0.5s ease-out; }
+@keyframes flashA { from { background: var(--again); color: #fff; transform: scale(1.08); } }
+@keyframes flashB { from { background: var(--again); color: #fff; transform: scale(1.08); } }
+/* The key wanted, nudged when another was pressed. */
+.nudgeA { animation: nudgeA 0.4s ease-out; }
+.nudgeB { animation: nudgeB 0.4s ease-out; }
+@keyframes nudgeA { 35% { transform: scale(1.16); } }
+@keyframes nudgeB { 35% { transform: scale(1.16); } }
+/* ⌫ when what was typed went off the way: violet, as the letters it takes back. */
+.next.nextBack { border-color: var(--again); background: var(--again); }
+
+@container (min-width: 560px) {
+  .keys { --u: calc((100cqw - 2 * var(--pad)) / 15); --gap: 5px; }
+  .row[data-row="1"], .row[data-row="2"], .spaceRow { padding-left: 0; }
+  .spaceRow { padding-left: calc(var(--u) * 4); }
+  .key { width: calc(var(--u) * var(--w, 1) - var(--gap)); height: 46px; font-size: 17px; }
+  .lead, .tail, .extra { display: inline-flex; }
+  .top { font-size: 11px; }
+}

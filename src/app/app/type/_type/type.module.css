@@ -1,0 +1,27 @@
+/* 打つ: the rows of keys, and rounds of words and sentences. Hairlines, one accent. */
+.physical { margin: 8px 0 0; font-size: 13px; line-height: 1.7; color: var(--muted); }
+.drills { list-style: none; margin: 0; padding: 0; }
+.drills > li { border-top: 1px solid var(--line); }
+.drills > li:last-child { border-bottom: 1px solid var(--line); }
+
+.round, .drill { display: flex; flex-direction: column; gap: 12px; padding: 16px 0 32px; }
+.end { display: flex; flex-direction: column; gap: 12px; padding: 20px 0; animation: settle 0.4s ease-out both; }
+@keyframes settle { from { opacity: 0; transform: translateY(8px); } }
+.endTitle { margin: 0; font-size: 20px; font-weight: 600; }
+
+/* キーの場所: the key now, those to come */
+.now { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 8px 0; }
+.big {
+  min-width: 96px; height: 96px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px;
+  border: 1.5px solid var(--accent); border-radius: 18px; background: var(--tint); color: var(--accent);
+  font-family: var(--font-mono); font-size: 56px; line-height: 1; animation: pop 0.18s ease-out both;
+}
+.big[data-miss] { border-color: var(--again); background: var(--again-tint); color: var(--again); animation: shake 0.32s ease-in-out both; }
+@keyframes pop { from { transform: scale(0.92); opacity: 0.4; } }
+@keyframes shake {
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+.ahead { list-style: none; margin: 0; padding: 0; display: flex; gap: 14px; font-family: var(--font-mono); font-size: 22px; color: var(--faint); }

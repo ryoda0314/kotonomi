@@ -1,0 +1,31 @@
+.stats { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.stats > div { padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); }
+.stats dt { font-size: 12.5px; color: var(--muted); }
+.stats dd { margin: 2px 0 0; font-size: 22px; font-weight: 600; font-family: var(--font-en); }
+@media (min-width: 720px) {
+  .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* The words, by how they stand: those coming back first, in violet */
+.group { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 8px 0 12px; border-bottom: 1px solid var(--line); }
+.groupTitle { margin: 4px 0 0; display: flex; gap: 8px; align-items: baseline; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.groupTitle > span { font-family: var(--font-en); font-weight: 400; color: var(--muted); }
+.group[data-group="due"] .groupTitle { color: var(--again); }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  min-height: 34px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: 9px; background: var(--paper);
+  color: var(--ink); font-family: var(--font-mono); font-size: 14px; cursor: pointer;
+}
+.chip:hover { border-color: var(--accent); }
+.group[data-group="due"] .chip { border-color: var(--again); background: var(--again-tint); color: var(--again); }
+.group[data-group="known"] .chip { color: var(--muted); border-style: dashed; }
+
+.days { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.days > li { padding: 12px 0; border-top: 1px solid var(--line); }
+.days > li:last-child { border-bottom: 1px solid var(--line); }
+.dayHead { margin: 0 0 6px; font-size: 15px; font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.dayHead > span { font-size: 12px; font-weight: 500; color: var(--accent); }
+.dayList { margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.dayList > div { display: flex; gap: 12px; font-size: 14px; }
+.dayList dt { flex-shrink: 0; width: 9em; color: var(--muted); }
+.dayList dd { margin: 0; font-family: var(--font-mono); font-size: 13.5px; }

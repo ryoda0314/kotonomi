@@ -1,0 +1,66 @@
+/* 覚える: the meaning above, the word or sentence typed under it, the keyboard below. As in the sisters: hairlines,
+   one accent, what comes back in the again violet, and the end of a round settling in from below. */
+.body { display: flex; flex-direction: column; gap: 16px; padding: 14px 0 36px; }
+.screen { display: flex; flex-direction: column; gap: 12px; animation: settle 0.3s ease-out both; }
+@keyframes settle { from { opacity: 0; transform: translateY(6px); } }
+.lead { margin: 0; font-size: 14px; line-height: 1.7; color: var(--muted); }
+
+/* The meaning: what the word is, before it is typed (出会う) or as what it is recalled from (思い出す). */
+.prompt { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+.prompt[data-due] { padding: 8px 12px; border-left: 3px solid var(--again); background: var(--again-tint); }
+.pos { flex-shrink: 0; font-size: 12px; color: var(--muted); padding: 2px 8px; border-radius: 999px; background: var(--surface); }
+.prompt[data-due] .pos { background: var(--paper); }
+.meaning { flex: 1; min-width: 0; margin: 0; font-size: 19px; font-weight: 600; line-height: 1.5; }
+.leadRow { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.leadRow :global(.link-button) { font-size: 13px; }
+
+/* The sentence */
+.lineHead { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; }
+.lineWord { font-family: var(--font-mono); font-size: 16px; color: var(--accent); }
+.lineJa { font-size: 13.5px; color: var(--muted); }
+.exJa { margin: 0; font-size: 14px; line-height: 1.7; color: var(--muted); }
+.readLine { margin: 0; font-family: var(--font-en); font-size: 19px; line-height: 1.8; }
+
+/* 思い出す: help when asked for, and how it went */
+.hints { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.hint {
+  display: inline-flex; align-items: center; gap: 5px; min-height: 36px; padding: 0 12px; border-radius: 999px;
+  border: 1px solid var(--line-2); background: var(--paper); font-size: 13px; color: var(--ink-2); cursor: pointer;
+}
+.hint:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.hint:disabled { color: var(--faint); cursor: default; }
+.shown { margin-left: 6px; font-family: var(--font-mono); font-size: 20px; color: var(--accent); }
+.hintLine { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: var(--radius); background: var(--surface); }
+.hintLine .readLine { font-size: 17px; }
+.result {
+  margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 8px 12px;
+  border-left: 3px solid var(--again); background: var(--again-tint); color: var(--again); font-size: 14px;
+}
+.result[data-clean] { border-left-color: var(--accent); background: var(--tint); color: var(--accent); }
+.answer { font-family: var(--font-mono); font-size: 24px; color: var(--ink); }
+
+/* このひと回りのおわりに */
+.end { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; animation: settle 0.4s ease-out both; }
+.endLabel { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
+.endGroup { display: flex; flex-direction: column; gap: 6px; }
+.endHead { margin: 0; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.owed { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-left: 3px solid var(--again); background: var(--again-tint); }
+.owed .endHead { color: var(--again); }
+.owedWords { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.owedWord {
+  min-height: 38px; padding: 0 12px; border: 1px solid var(--again); border-radius: 10px; background: var(--paper);
+  color: var(--again); font-family: var(--font-mono); font-size: 15px; cursor: pointer;
+}
+
+/* はじめに */
+.options { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.option {
+  width: 100%; height: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 12px 14px;
+  border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--paper); color: var(--ink); text-align: left; cursor: pointer;
+}
+.option:hover { border-color: var(--accent); }
+.option[aria-pressed="true"] { border-color: var(--accent); background: var(--tint); }
+.optionTitle { font-size: 16px; font-weight: 600; }
+.option[aria-pressed="true"] .optionTitle { color: var(--accent); }
+.optionLead { font-size: 12.5px; line-height: 1.6; color: var(--muted); }

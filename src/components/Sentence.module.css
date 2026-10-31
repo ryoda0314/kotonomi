@@ -1,0 +1,5 @@
+.mark { color: var(--accent); font-weight: 600; }
+.blank {
+  display: inline-block; width: 4.5em; height: 1em; margin: 0 0.1em; vertical-align: -0.15em;
+  border-bottom: 1.5px solid var(--accent);
+}
