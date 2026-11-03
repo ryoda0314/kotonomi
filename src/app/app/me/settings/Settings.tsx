@@ -8,6 +8,7 @@ import page from "@/components/page.module.css";
 import { EXAM_CHOICES, FRESH_CHOICES, LEVEL_CHOICES, useExam, useFresh, useFrom, useLayout } from "@/components/prefs";
 import { useVoices } from "@/components/sound";
 import { Speak } from "@/components/Speak";
+import { SEND_USAGE } from "@/components/usage";
 import type { Level } from "@/content/types";
 import { ja } from "@/lib/i18n/ja";
 import { LAYOUTS } from "@/lib/keys";
@@ -20,9 +21,10 @@ const t = ja.settings;
 const SAMPLE = "The meeting has been postponed until Friday.";
 const never = () => () => undefined;
 
-/** 記録と設定: which words, how to type, how to hear, the ことのあめ account, and clearing the record. */
+/** 記録と設定: which words, how to type, how to hear, the ことのあめ account, the record and whether its use is counted. */
 export function Settings() {
   const state = useRecord();
+  const [sendUsage, setSendUsage] = usePref(SEND_USAGE, true);
   const [sound, setSound] = usePref("sound", true);
   const [slow, setSlow] = usePref("slow", false);
   const [voice, setVoice] = useText("voice");
@@ -202,6 +204,13 @@ export function Settings() {
           </button>
         </div>
         {done ? <p className={page.note}>{t.done}</p> : null}
+        <label className={styles.toggle}>
+          <span>
+            <span className={styles.toggleTitle}>{t.usage}</span>
+            <span className={page.note}>{t.usageLead}</span>
+          </span>
+          <input type="checkbox" checked={sendUsage} onChange={(e) => setSendUsage(e.target.checked)} />
+        </label>
       </section>
     </div>
   );

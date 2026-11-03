@@ -1,4 +1,5 @@
 import { BottomNav } from "@/components/BottomNav";
+import { CountOpen } from "@/components/CountOpen";
 import { Logo } from "@/components/Logo";
 import { SyncOnce } from "@/components/SyncOnce";
 import { WordHost } from "@/components/WordSheet";
@@ -13,6 +14,7 @@ export default function AppLayout({ children }: LayoutProps<"/app">) {
       </WordHost>
       <BottomNav labels={ja.nav} brand={<Logo size="sm" href="/" />} />
       <SyncOnce />
+      <CountOpen />
     </div>
   );
 }

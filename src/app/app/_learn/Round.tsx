@@ -14,10 +14,11 @@ import page from "@/components/page.module.css";
 import { usePref } from "@/components/local";
 import { scopeOf, useExam, useFresh, useFrom } from "@/components/prefs";
 import { stop } from "@/components/sound";
+import { countUsage } from "@/components/usage";
 import { WORD } from "@/content/index";
 import type { Word } from "@/content/types";
 import { ja } from "@/lib/i18n/ja";
-import { dayOf, finishRound, knewWord, recalledWord, typedLine, typedWord } from "@/lib/record";
+import { dayOf, finishRound, knewWord, recalledWord, typedLine, typedWord, type RoundEntry } from "@/lib/record";
 import { againIn, freshWords, planRound, recallOrder, type RoundPlan } from "@/lib/round";
 import { commit, getState, useRecord } from "@/lib/store";
 import { RoundEnd } from "./End";
@@ -90,11 +91,16 @@ export function Round() {
   const item = run.queue[run.i];
   const recalls = run.queue.filter((x) => x.kind === "recall");
 
+  /** The round done: kept in the record, and counted once it is (src/components/usage.ts), whichever way it ended. */
+  const finish = (entry: RoundEntry) => {
+    const before = getState();
+    if (commit((s) => finishRound(s, entry)) !== before) countUsage("learn");
+  };
+
   const next = () => {
     stop();
     if (run.i + 1 >= run.queue.length) {
-      const entry = { at: run.plan.at, fresh: run.fresh.map((w) => w.en), due: run.plan.due.map((w) => w.en), missed: run.missed };
-      commit((s) => finishRound(s, entry));
+      finish({ at: run.plan.at, fresh: run.fresh.map((w) => w.en), due: run.plan.due.map((w) => w.en), missed: run.missed });
     }
     setRun({ ...run, i: run.i + 1 });
     window.scrollTo({ top: 0 });
@@ -119,14 +125,15 @@ export function Round() {
     ];
     const fresh = run.fresh.flatMap((x) => (x.en !== w.en ? [x] : more ? [more] : []));
     if (run.i >= queue.length) {
-      const entry = { at: run.plan.at, fresh: fresh.map((x) => x.en), due: run.plan.due.map((x) => x.en), missed: run.missed };
-      commit((s) => finishRound(s, entry));
+      finish({ at: run.plan.at, fresh: fresh.map((x) => x.en), due: run.plan.due.map((x) => x.en), missed: run.missed });
     }
     setRun({ ...run, queue, fresh });
   };
 
   const recalled = (w: Word, again: number, clean: boolean) => {
     commit((s) => recalledWord(s, w.en, Date.now(), clean));
+    // Typed from its meaning, alone or with help: counted as the learner's own (src/components/usage.ts).
+    countUsage("say");
     if (clean) return;
     setRun((r) =>
       r && {
