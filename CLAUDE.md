@@ -28,12 +28,14 @@ and their way of keeping a record.
   the one whose name says it sounds most natural. Nothing is voiced ahead yet.
 - How many use it, as ことのね counts it: `src/components/usage.ts` (`countUsage`) sends ことのあめ's `pl_app_ping`
   (`../polylinga/supabase/migrations/20261103000000_app_usage.sql`, `p_app` `kotonomi`) this device's number (made here
-  at random, `vocab:device`), whether it was opened from the home screen, and one of `open` (a page of the app loaded:
+  at random, `vocab:device`), whether it was opened from the home screen, whether a ことのあめ account is signed in here
+  (`p_signed_in`, only yes or no, from `account()`'s session on the device), the kind of device (`p_platform`:
+  `platformOf` in `src/lib/usage.ts`, ios, android, pc or other), and one of `open` (a page of the app loaded:
   `CountOpen` in the app layout, once a load), `learn` (a round of 覚える finished, when `finishRound` keeps it) and
   `say` (a word typed from its meaning in 思い出す, alone or with help, when `recalledWord` keeps it), both in
-  `Round.tsx`. A plain fetch with the anon key, never the signed-in client: no account, name, email or word goes. Only
-  a production build at `NEXT_PUBLIC_SITE_URL` counts (`countsHere`, `src/lib/usage.ts`); none is set yet, so nothing
-  is counted. 設定's 使われ方の数を送る (`vocab:sendUsage`, on until switched off) stops it.
+  `Round.tsx`. A plain fetch with the anon key, never the signed-in client: no account id, name, email, token or word
+  goes. Only a production build at `NEXT_PUBLIC_SITE_URL` counts (`countsHere`); none is set yet, so nothing is
+  counted. 設定's 使われ方の数を送る (`vocab:sendUsage`, on until switched off) stops it.
 
 ## The core (`src/lib`, pure, tested in `tests/`)
 

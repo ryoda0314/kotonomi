@@ -1,15 +1,17 @@
 "use client";
 
 import { APP } from "@/lib/connect";
-import { countsHere } from "@/lib/usage";
+import { account } from "@/lib/sync";
+import { countsHere, platformOf } from "@/lib/usage";
 import { prefNow } from "./local";
 
 // How many use the app, as ことのね counts it (its src/util/usage.ts): this device's number (a random one made here, tied
-// to no one), whether it was opened from the home screen, and which of three things was done:
+// to no one), whether it was opened from the home screen, whether a ことのあめ account is signed in here (yes or no,
+// from the session kept on this device), the kind of device (platformOf), and which of three things was done:
 //   open   the app opened, once a page load (CountOpen, in the app layout)
 //   learn  a round of 覚える finished, when the record keeps it (_learn/Round.tsx)
 //   say    a word typed from its meaning in 思い出す, when the record keeps it (_learn/Round.tsx)
-// Nothing else: no account, name, email or word. Sent to ことのあめ's Supabase (pl_app_ping, in
+// Nothing else: no account id, name, email, token or word. Sent to ことのあめ's Supabase (pl_app_ping, in
 // ../polylinga/supabase/migrations/20261103000000_app_usage.sql) by a plain fetch with the anon key, never the
 // signed-in client, so a learner's session does not go with it. Only from the public address (countsHere), and not
 // once switched off in 設定. Never waited for: a count that cannot go is simply not counted.
@@ -52,12 +54,28 @@ export function countUsage(kind: UsageKind): void {
   if (!countsHere(location.origin, SITE, process.env.NODE_ENV === "production") || !prefNow(SEND_USAGE, true)) return;
   const device = deviceId();
   if (!device) return;
-  fetch(`${URL_}/rest/v1/rpc/pl_app_ping`, {
-    method: "POST",
-    headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ p_app: APP, p_device: device, p_kind: kind, p_standalone: standalone() }),
-    keepalive: true,
-  }).catch(() => {
-    // Not counted this time.
-  });
+  const ping = {
+    p_app: APP,
+    p_device: device,
+    p_kind: kind,
+    p_standalone: standalone(),
+    p_platform: platformOf(navigator.userAgent, navigator.maxTouchPoints ?? 0),
+  };
+  // Only whether someone is signed in goes, never who.
+  account()
+    .then(
+      (a) => !!a,
+      () => false,
+    )
+    .then((signedIn) =>
+      fetch(`${URL_}/rest/v1/rpc/pl_app_ping`, {
+        method: "POST",
+        headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ ...ping, p_signed_in: signedIn }),
+        keepalive: true,
+      }),
+    )
+    .catch(() => {
+      // Not counted this time.
+    });
 }
